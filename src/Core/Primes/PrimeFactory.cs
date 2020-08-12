@@ -1,18 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Primes
 {
     public class PrimeFactory
     {
+        public static List<int> PrimeNumbersLessEqualToNThrowsExceptionOn5(int n)
+        {
+            if (n == 5)
+                throw new Exception("I don't like the number five.");
+            else
+                return PrimeNumbersLessEqualToN(n);
+        }
         public static List<int> PrimeNumbersLessEqualToN(int n)
         {
             List<int> primes = new List<int>();
- 
+
             int i, j, isPrime;
- 
+
             for (i = 1; i <= n; i++)
             {
- 
+
                 if (i == 1 || i == 0)
                     continue;
 
@@ -26,7 +34,7 @@ namespace Primes
                         break;
                     }
                 }
- 
+
                 if (isPrime == 1)
                     primes.Add(i);
             }
