@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Mahamudra.Result.Core.Patterns;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -38,6 +39,28 @@ namespace Mahamudra.Contemporary
                     if (_doLogging)
                         _logger.LogError($"Processing { item.ToString()} with error: {ex.ToString()}");
                     throw ex;
+                }
+            });
+            return dic;
+        }
+        public ConcurrentDictionary<Result<T, string>, M> Executev2<T, M>(IEnumerable<T> list, Func<T, Task<M>> f)
+        {
+            ConcurrentDictionary<Result<T, string>, M> dic = new ConcurrentDictionary<Result<T, string>, M>();
+
+            Parallel.ForEach(list, (item) =>
+            {
+                try
+                {
+                    var response = Task.Run(async () => await f(item)).Result;
+                    dic.TryAdd(new Success<T, string>(item), response);
+                    if (_doLogging)
+                        _logger.LogInformation($"Processing { item.ToString()} on thread {Thread.CurrentThread.ManagedThreadId}");
+                }
+                catch (Exception ex)
+                {
+                    if (_doLogging)
+                        _logger.LogError($"Processing { item.ToString()} with error: {ex.ToString()}");
+                    dic.TryAdd(new Failure<T, string>(ex.ToString()), default(M));
                 }
             });
             return dic;
