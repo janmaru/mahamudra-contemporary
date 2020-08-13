@@ -6,7 +6,9 @@
     <AssemblyName>Mahamudra.Contemporary</AssemblyName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>marujan</Authors>
-    <Description>Task Parallel Library</Description>
+    <Description>Task Parallel Library. Icon by marianne bos on Unsplash</Description>
+    <PackageIcon>128_nuget.png</PackageIcon>
+    <PackageIconUrl>http://nuget-janmaru.s3-eu-west-1.amazonaws.com/packets/128_nuget.png</PackageIconUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,5 +19,11 @@
     <PackageReference Include="Mahamudra.Core" Version="1.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.7" />
     <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="128_nuget.png" Pack="true" PackagePath="">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

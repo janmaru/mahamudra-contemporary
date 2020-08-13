@@ -30,6 +30,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CBA71E09-9836-4839-8E96-3A183998B5D2}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\dotnet-core.yml = .github\workflows\dotnet-core.yml
+		paul-engel-bx4JS1lGB0U-unsplash.jpg = paul-engel-bx4JS1lGB0U-unsplash.jpg
+		readme.md = readme.md
 	EndProjectSection
 EndProject
 Global
