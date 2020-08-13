@@ -1,5 +1,5 @@
 ﻿using Mahamudra.Contemporary;
-using Mahamudra.Patterns;
+using Mahamudra.Core.Entity;
 using Microsoft.Extensions.Logging;
 using Primes;
 using System;

@@ -1,4 +1,4 @@
-﻿using Mahamudra.Patterns; 
+﻿using Mahamudra.Core.Entity;
 
 namespace Primes
 {

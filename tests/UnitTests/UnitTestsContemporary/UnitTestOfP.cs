@@ -1,5 +1,5 @@
 using Mahamudra.Contemporary;
-using Mahamudra.Patterns;
+using Mahamudra.Core.Entity;
 using Mahamudra.Result.Core.Patterns;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
