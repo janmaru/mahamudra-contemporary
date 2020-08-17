@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contemporary", "src\Core\Contemporary\Contemporary.csproj", "{3DCC245D-8321-4199-B345-39CEDF87579D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "src\Presentation\ConsoleApp\ConsoleApp.csproj", "{E0FFEC27-44F4-4C5B-9045-0BD0A0208212}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BenchMark", "src\Presentation\BenchMark\BenchMark.csproj", "{E0FFEC27-44F4-4C5B-9045-0BD0A0208212}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestsContemporary", "tests\UnitTests\UnitTestsContemporary\UnitTestsContemporary.csproj", "{CC1A1A56-57C7-4291-B283-7FD52852D989}"
 EndProject
