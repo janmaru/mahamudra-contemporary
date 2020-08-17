@@ -43,21 +43,21 @@ namespace UnitTestsContemporary
         }
 
         [TestMethod]
-        public void ExecuteAsync_ShouldComputeFirstPrimes_True()
+        public void ExecuteAsync_ShouldComputeSumOfFirstPrimesLessEqualToTen_True()
         {
             var list = _p.ExecuteAsync<BaseEntity<int>, int>(_primes, SumAsync);
             Assert.AreEqual(list.Sum(x => x.Value), 2 + 5 + 10 + 17);
         }
 
         [TestMethod]
-        public void Execute_ShouldComputeFirstPrimes_True()
+        public void Execute_ShouldComputeSumOfFirstPrimesLessEqualToTen_True()
         {
             var list = _p.Execute<BaseEntity<int>, int>(_primes, Sum);
             Assert.AreEqual(list.Sum(x => x.Value), 2 + 5 + 10 + 17);
         }
 
         [TestMethod]
-        public void ExecuteAsyncResult_ShouldComputeFirstPrimes_True()
+        public void ExecuteAsyncResult_ShouldComputeSumOfFirstPrimesLessEqualToTenWithError_True()
         {
             var list = _p.ExecuteAsyncResult<BaseEntity<int>, int>(_primes, SumAsyncWithException);
 
@@ -68,7 +68,7 @@ namespace UnitTestsContemporary
         }
 
         [TestMethod]
-        public void ExecuteResult_ShouldComputeFirstPrimes_True()
+        public void ExecuteResult_ShouldComputeSumOfFirstPrimesLessEqualToTenWithError_True()
         {
             var list = _p.ExecuteResult<BaseEntity<int>, int>(_primes, SumWithException);
 
