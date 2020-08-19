@@ -5,6 +5,14 @@ namespace Primes
 {
     public class PrimeFactory
     {
+        public static IEnumerable<int> FirstNIntegers(int n)
+        {
+            for (int i = 1; i <= n; i++)
+            {
+                yield return i;
+            }
+        }
+
         public static List<int> PrimeNumbersLessEqualToNThrowsExceptionOn5(int n)
         {
             if (n == 5)
@@ -12,6 +20,7 @@ namespace Primes
             else
                 return PrimeNumbersLessEqualToN(n);
         }
+
         public static List<int> PrimeNumbersLessEqualToN(int n)
         {
             List<int> primes = new List<int>();
