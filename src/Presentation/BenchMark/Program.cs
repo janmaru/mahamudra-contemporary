@@ -10,6 +10,7 @@ using Polly.Extensions.Http;
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 
 namespace Mahamudra.Contemporary.BenchMark
 {
@@ -27,8 +28,13 @@ namespace Mahamudra.Contemporary.BenchMark
             BenchmarkRunner.Run<ParallelAsyncFactoryBenchmarks>(config);
             // end benchmark 
 
-            app.Run();
+            IServiceProvider serviceProvider = app.Services; 
+            var pollyTestService = serviceProvider.GetRequiredService<PollyTestService>();
 
+            // test polly retry policy
+            pollyTestService.ExecuteParallelResultWillFail();
+
+            app.Run(); 
             Console.ReadKey(true);
         }
 
@@ -53,9 +59,12 @@ namespace Mahamudra.Contemporary.BenchMark
                   services.AddSingleton<IHostEnvironment>(env);
                   services.AddLogging();
 
-                  services.AddHttpClient<IHttpService, HttpService>()
-                   .AddPolicyHandler(GetRetryPolicy());
- 
+                  services.AddHttpClient<IHttpErrorService, HttpErrorService>()
+                    .AddPolicyHandler(GetRetryPolicy()) 
+                    .SetHandlerLifetime(Timeout.InfiniteTimeSpan);
+
+                  services.AddSingleton<IHttpService, HttpService>(); 
+                  services.AddSingleton<PollyTestService>();
               });
 
         private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
@@ -63,7 +72,7 @@ namespace Mahamudra.Contemporary.BenchMark
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
                 .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
-                .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(3));
+                .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(5));
         }
     } 
 }

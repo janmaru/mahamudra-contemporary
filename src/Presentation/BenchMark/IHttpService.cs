@@ -7,4 +7,6 @@ namespace Mahamudra.Contemporary.BenchMark
     {
         Task<int> Get(BaseEntity<int> number);
     }
+
+    public interface IHttpErrorService : IHttpService { }
 }

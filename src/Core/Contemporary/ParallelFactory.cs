@@ -1,5 +1,6 @@
 ﻿using Mahamudra.Result.Core.Patterns;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -11,10 +12,11 @@ namespace Mahamudra.Contemporary
     public class ParallelFactory
     {
         private readonly ILogger _logger;
-        private readonly bool _doLogging = true;
+        private static string LogOkTemplate = "{0}: Processing {1} on thread {2}";
+        private static string LogErrTemplate = "{0}: Processing {1} on thread {2} with error: {3}";
         public ParallelFactory()
         {
-            _doLogging = false;
+            this._logger = new NullLogger<ParallelFactory>();
         }
         public ParallelFactory(ILogger logger)
         {
@@ -35,16 +37,14 @@ namespace Mahamudra.Contemporary
             {
                 try
                 {
-                    var response = Task.Run(async () => await f(item)).Result;
+                    var response = Task.Run(async () => await f(item).ConfigureAwait(false)).Result;
                     dic.TryAdd(item, response);
-                    if (_doLogging)
-                        _logger.LogInformation($"Processing { item.ToString()} on thread {Thread.CurrentThread.ManagedThreadId}");
+                    _logger.LogInformation(String.Format(LogOkTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId));
                 }
                 catch (Exception ex)
                 {
-                    if (_doLogging)
-                        _logger.LogError($"Processing { item.ToString()} with error: {ex.ToString()}");
-                    throw ex;
+                    _logger.LogError(String.Format(LogErrTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId, ex.ToString()));
+                     throw ex;
                 }
             });
             return dic;
@@ -63,16 +63,14 @@ namespace Mahamudra.Contemporary
             Parallel.ForEach(list, (item) =>
             {
                 try
-                {
-                    var response = Task.Run(async () => await f(item)).Result;
+                { 
+                    var response = Task.Run(async () => await f(item).ConfigureAwait(false)).Result;
                     dic.TryAdd(new Success<T, string>(item), response);
-                    if (_doLogging)
-                        _logger.LogInformation($"Processing { item.ToString()} on thread {Thread.CurrentThread.ManagedThreadId}");
+                    _logger.LogInformation(String.Format(LogOkTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId));
                 }
                 catch (Exception ex)
                 {
-                    if (_doLogging)
-                        _logger.LogError($"Processing { item.ToString()} with error: {ex.ToString()}");
+                    _logger.LogError(String.Format(LogErrTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId, ex.ToString()));
                     dic.TryAdd(new Failure<T, string>(ex.ToString()), default(M));
                 }
             });
@@ -96,14 +94,12 @@ namespace Mahamudra.Contemporary
                 {
                     var response = f(item);
                     dic.TryAdd(new Success<T, string>(item), response);
-                    if (_doLogging)
-                        _logger.LogInformation($"Processing { item.ToString()} on thread {Thread.CurrentThread.ManagedThreadId}");
+                    _logger.LogInformation(String.Format(LogOkTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId));
                 }
                 catch (Exception ex)
                 {
-                    if (_doLogging)
-                        _logger.LogError($"Processing { item.ToString()} with error: {ex.ToString()}");
                     dic.TryAdd(new Failure<T, string>(ex.ToString()), default(M));
+                    _logger.LogError(String.Format(LogErrTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId, ex.ToString()));
                 }
             });
             return dic;
@@ -123,19 +119,17 @@ namespace Mahamudra.Contemporary
             {
                 try
                 {
-                    var response =  f(item);
+                    var response = f(item);
                     dic.TryAdd(item, response);
-                    if (_doLogging)
-                        _logger.LogInformation($"Processing { item.ToString()} on thread {Thread.CurrentThread.ManagedThreadId}");
+                    _logger.LogInformation(String.Format(LogOkTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId));
                 }
                 catch (Exception ex)
                 {
-                    if (_doLogging)
-                        _logger.LogError($"Processing { item.ToString()} with error: {ex.ToString()}");
+                    _logger.LogError(String.Format(LogErrTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId, ex.ToString()));
                     throw ex;
                 }
             });
             return dic;
-        } 
+        }
     }
 }
