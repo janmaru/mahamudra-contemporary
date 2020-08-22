@@ -37,7 +37,7 @@ namespace Mahamudra.Contemporary
             {
                 try
                 {
-                    var response = Task.Run(async () => await f(item).ConfigureAwait(false)).Result;
+                    var response = f(item).ToSync<M>();
                     dic.TryAdd(item, response);
                     _logger.LogInformation(String.Format(LogOkTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId));
                 }
@@ -63,8 +63,8 @@ namespace Mahamudra.Contemporary
             Parallel.ForEach(list, (item) =>
             {
                 try
-                { 
-                    var response = Task.Run(async () => await f(item).ConfigureAwait(false)).Result;
+                {
+                    var response = f(item).ToSync<M>();
                     dic.TryAdd(new Success<T, string>(item), response);
                     _logger.LogInformation(String.Format(LogOkTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId));
                 }

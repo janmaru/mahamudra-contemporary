@@ -74,5 +74,13 @@ namespace Mahamudra.Contemporary.BenchMark
                 .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
                 .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(5));
         }
+
+        private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicyv2()
+        {
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
+                .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+        }
     } 
 }
