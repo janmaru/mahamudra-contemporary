@@ -7,8 +7,11 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>marujan</Authors>
     <Description>Task Parallel Library. Icon by marianne bos on Unsplash</Description>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageIcon>128_nuget.png</PackageIcon>
     <PackageIconUrl>http://nuget-janmaru.s3-eu-west-1.amazonaws.com/packets/128_nuget.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/janmaru/mahamudra-contemporary</RepositoryUrl>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

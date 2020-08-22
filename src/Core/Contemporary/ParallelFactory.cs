@@ -39,11 +39,11 @@ namespace Mahamudra.Contemporary
                 {
                     var response = f(item).ToSync<M>();
                     dic.TryAdd(item, response);
-                    _logger.LogInformation(String.Format(LogOkTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId));
+                    _logger.LogInformation(String.Format(LogOkTemplate, DateTime.UtcNow.ToMilliseconds(), item.ToString(), Thread.CurrentThread.ManagedThreadId));
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(String.Format(LogErrTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId, ex.ToString()));
+                    _logger.LogError(String.Format(LogErrTemplate, DateTime.UtcNow.ToMilliseconds(), item.ToString(), Thread.CurrentThread.ManagedThreadId, ex.ToString()));
                      throw ex;
                 }
             });
@@ -66,11 +66,11 @@ namespace Mahamudra.Contemporary
                 {
                     var response = f(item).ToSync<M>();
                     dic.TryAdd(new Success<T, string>(item), response);
-                    _logger.LogInformation(String.Format(LogOkTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId));
+                    _logger.LogInformation(String.Format(LogOkTemplate, DateTime.UtcNow.ToMilliseconds(), item.ToString(), Thread.CurrentThread.ManagedThreadId));
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(String.Format(LogErrTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId, ex.ToString()));
+                    _logger.LogError(String.Format(LogErrTemplate, DateTime.UtcNow.ToMilliseconds(), item.ToString(), Thread.CurrentThread.ManagedThreadId, ex.ToString()));
                     dic.TryAdd(new Failure<T, string>(ex.ToString()), default(M));
                 }
             });
@@ -94,12 +94,12 @@ namespace Mahamudra.Contemporary
                 {
                     var response = f(item);
                     dic.TryAdd(new Success<T, string>(item), response);
-                    _logger.LogInformation(String.Format(LogOkTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId));
+                    _logger.LogInformation(String.Format(LogOkTemplate, DateTime.UtcNow.ToMilliseconds(), item.ToString(), Thread.CurrentThread.ManagedThreadId));
                 }
                 catch (Exception ex)
                 {
                     dic.TryAdd(new Failure<T, string>(ex.ToString()), default(M));
-                    _logger.LogError(String.Format(LogErrTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId, ex.ToString()));
+                    _logger.LogError(String.Format(LogErrTemplate, DateTime.UtcNow.ToMilliseconds(), item.ToString(), Thread.CurrentThread.ManagedThreadId, ex.ToString()));
                 }
             });
             return dic;
@@ -121,11 +121,11 @@ namespace Mahamudra.Contemporary
                 {
                     var response = f(item);
                     dic.TryAdd(item, response);
-                    _logger.LogInformation(String.Format(LogOkTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId));
+                    _logger.LogInformation(String.Format(LogOkTemplate, DateTime.UtcNow.ToMilliseconds(), item.ToString(), Thread.CurrentThread.ManagedThreadId));
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(String.Format(LogErrTemplate, DateTime.UtcNow, item.ToString(), Thread.CurrentThread.ManagedThreadId, ex.ToString()));
+                    _logger.LogError(String.Format(LogErrTemplate, DateTime.UtcNow.ToMilliseconds(), item.ToString(), Thread.CurrentThread.ManagedThreadId, ex.ToString()));
                     throw ex;
                 }
             });
