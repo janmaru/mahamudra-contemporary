@@ -11,6 +11,8 @@
 		<PackageIcon>lotus-flower.png</PackageIcon>
 		<RepositoryUrl>https://github.com/janmaru/mahamudra-contemporary</RepositoryUrl>
 		<IsPackable>true</IsPackable>
+		<PackageId>Mahamudra.Contemporary</PackageId>
+		<Product>Mahamudra Contemporary</Product>
 	</PropertyGroup>
 
 	<ItemGroup>
