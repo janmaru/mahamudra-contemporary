@@ -1,32 +1,39 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>Mahamudra.Contemporary</RootNamespace>
-    <AssemblyName>Mahamudra.Contemporary</AssemblyName>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>marujan</Authors>
-    <Description>Task Parallel Library. Icon by marianne bos on Unsplash</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageIcon>128_nuget.png</PackageIcon>
-    <PackageIconUrl>http://nuget-janmaru.s3-eu-west-1.amazonaws.com/packets/128_nuget.png</PackageIconUrl>
-    <RepositoryUrl>https://github.com/janmaru/mahamudra-contemporary</RepositoryUrl>
-    <IsPackable>true</IsPackable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>
+		<RootNamespace>Mahamudra.Contemporary</RootNamespace>
+		<AssemblyName>Mahamudra.Contemporary</AssemblyName>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Authors>marujan</Authors>
+		<Description>Task Parallel Library. Lotus flower icons created by Freepik - Flaticon</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageIcon>lotus-flower.png</PackageIcon>
+		<RepositoryUrl>https://github.com/janmaru/mahamudra-contemporary</RepositoryUrl>
+		<IsPackable>true</IsPackable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="GitVersionTask" Version="5.3.7">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Mahamudra.Core" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.7" />
-    <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="GitVersion.MsBuild" Version="5.8.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Mahamudra.Core" Version="3.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+		<PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
+	</ItemGroup> 
 
-  <ItemGroup>
-    <None Update="128_nuget.png" Pack="true" PackagePath="">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="lotus-flower.png">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="lotus-flower.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 </Project>
