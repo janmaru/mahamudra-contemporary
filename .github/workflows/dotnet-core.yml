@@ -1,64 +1,123 @@
-name: .NET Core
+name: Build and Publish to NuGet
 
 on:
   push:
     branches: [ master ]
+    tags: [ 'v*' ]
   pull_request:
     branches: [ master ]
 
-jobs: 
-  publish:
-    name: build, pack & publish
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+
+jobs:
+  build-and-test:
+    name: Build and Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2 
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-            dotnet-version: '6.0.x'
-            include-prerelease: true
+          dotnet-version: |
+            6.0.x
+            8.0.x
 
-      - name: Install dependencies
+      - name: Restore dependencies
         run: dotnet restore
+
       - name: Build
         run: dotnet build --configuration Release --no-restore
-      #- name: Test
-      #  run: dotnet test --no-restore --verbosity normal
 
-      # Publish
-      - name: publish Contemporary
-        id: publish_nuget
-        uses: rohith/publish-nuget@v2
+      - name: Test
+        run: dotnet test --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage"
+
+      - name: Pack
+        run: dotnet pack src/Core/Contemporary/Contemporary.csproj --configuration Release --no-build --output ./artifacts
+        
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
-          # Filepath of the project to be packaged, relative to root of repository
-          PROJECT_FILE_PATH: src/Core/Contemporary/Contemporary.csproj
+          name: nuget-packages
+          path: ./artifacts/*.nupkg
+
+  publish:
+    name: Publish to NuGet
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget-packages
+          path: ./artifacts
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Publish to NuGet
+        run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+  publish-on-version-change:
+    name: Publish on Version Change (Push to Master)
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Check if version changed
+        id: version-check
+        run: |
+          # Get current version from project file
+          CURRENT_VERSION=$(grep '<Version>' src/Core/Contemporary/Contemporary.csproj | sed 's/.*<Version>\(.*\)<\/Version>.*/\1/' | tr -d '[:space:]')
+          echo "Current version: $CURRENT_VERSION"
           
-          # NuGet package id, used for version detection & defaults to project name
-          PACKAGE_NAME: Mahamudra.Contemporary
+          # Check if this version exists on NuGet
+          RESPONSE=$(curl -s "https://api.nuget.org/v3-flatcontainer/mahamudra.contemporary/index.json" | jq -r '.versions[]' | grep "^$CURRENT_VERSION$" || echo "")
           
-          # Filepath with version info, relative to root of repository & defaults to PROJECT_FILE_PATH
-          VERSION_FILE_PATH: Directory.Build.props
+          if [ -z "$RESPONSE" ]; then
+            echo "Version $CURRENT_VERSION not found on NuGet. Will publish."
+            echo "should-publish=true" >> $GITHUB_OUTPUT
+            echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "Version $CURRENT_VERSION already exists on NuGet. Skipping publish."
+            echo "should-publish=false" >> $GITHUB_OUTPUT
+          fi
 
-          # Regex pattern to extract version info in a capturing group
-          VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
-          
-          # Useful with external providers like Nerdbank.GitVersioning, ignores VERSION_FILE_PATH & VERSION_REGEX
-          VERSION_STATIC: 3.0.1
+      - name: Download artifacts
+        if: steps.version-check.outputs.should-publish == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget-packages
+          path: ./artifacts
 
-          # Flag to toggle git tagging, enabled by default
-          TAG_COMMIT: true
+      - name: Publish to NuGet
+        if: steps.version-check.outputs.should-publish == 'true'
+        run: |
+          echo "Publishing version ${{ steps.version-check.outputs.version }} to NuGet"
+          dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
 
-          # Format of the git tag, [*] gets replaced with actual version
-          TAG_FORMAT: v*
-
-          # API key to authenticate with NuGet server
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-
-          # NuGet server uri hosting the packages, defaults to https://api.nuget.org
-          NUGET_SOURCE: https://api.nuget.org
-
-          # Flag to toggle pushing symbols along with nuget package to the server, disabled by default
-          INCLUDE_SYMBOLS: false
+      - name: Create and push tag
+        if: steps.version-check.outputs.should-publish == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag "v${{ steps.version-check.outputs.version }}"
+          git push origin "v${{ steps.version-check.outputs.version }}"

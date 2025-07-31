@@ -4,12 +4,16 @@
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<RootNamespace>Mahamudra.Contemporary</RootNamespace>
 		<AssemblyName>Mahamudra.Contemporary</AssemblyName>
+		<Version>3.0.2</Version>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Authors>marujan</Authors>
-		<Description>Task Parallel Library. Lotus flower icons created by Freepik - Flaticon</Description>
+		<Description>A robust Task Parallel Library that combines Railway Oriented Programming with parallel execution patterns. Execute collections of tasks concurrently while maintaining functional programming principles and comprehensive error handling.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageIcon>lotus-flower.png</PackageIcon>
 		<RepositoryUrl>https://github.com/janmaru/mahamudra-contemporary</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/janmaru/mahamudra-contemporary</PackageProjectUrl>
+		<PackageTags>parallel;async;railway-oriented-programming;functional-programming;task-parallel-library;concurrent</PackageTags>
+		<PackageReleaseNotes>Updated to .NET Standard 2.1 with improved performance and Railway Oriented Programming patterns.</PackageReleaseNotes>
 		<IsPackable>true</IsPackable>
 		<PackageId>Mahamudra.Contemporary</PackageId>
 		<Product>Mahamudra Contemporary</Product>
